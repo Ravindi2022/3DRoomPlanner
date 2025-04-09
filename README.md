@@ -4,7 +4,8 @@
 
 This project is developed as part of the PUSL 3122 module: Human-Computer Interaction, Computer Graphics, and Visualisation, as a group coursework assignment for the academic year 2024-2025.
 
-Features
+# Features
+
 Real-time 3D Room Visualization: View a fully customizable 3D model of a room with adjustable furniture elements like chairs, tables, and more.
 
 Room Dimensions: Choose the most suitable room size, shape, and color scheme for a realistic experience.
