@@ -88,8 +88,8 @@ function Ceiling({ roomWidth, roomLength, roomHeight, ceilingColor, thickness = 
 }
 
 /* Door Component:
-   - Renders a door with its left-side acting as the hinge.
-   - Clicking toggles open/closed.
+   - Renders a door with its left side acting as the hinge.
+   - Clicking toggles its open/closed state.
    - Uses the provided doorColor.
 */
 function Door({ doorWidth, doorHeight, onToggle, color, ...props }) {
@@ -116,7 +116,7 @@ function Door({ doorWidth, doorHeight, onToggle, color, ...props }) {
 
   return (
     <group {...props} onClick={handleClick}>
-      {/* Shift the door so its left edge is at the hinge */}
+      {/* Shift the door so its left edge aligns with the hinge */}
       <mesh ref={doorRef} position={[doorWidth / 2, doorHeight / 2, 0]}>
         <boxGeometry args={[doorWidth, doorHeight, 0.1]} />
         <meshStandardMaterial color={color} />
@@ -126,8 +126,8 @@ function Door({ doorWidth, doorHeight, onToggle, color, ...props }) {
 }
 
 /* Window Component:
-   - Renders a simple plane representing a window.
-   - The material is set to be double-sided so it’s visible from both sides.
+   - Renders a simple window as a plane.
+   - Uses a double-sided material for full visibility.
    - Uses the provided windowColor.
 */
 function Window({ windowWidth, windowHeight, color, ...props }) {
@@ -141,8 +141,8 @@ function Window({ windowWidth, windowHeight, color, ...props }) {
 
 /* Walls Component:
    - Renders all four walls.
-   - Conditionally places a Door and/or Window on the designated walls.
-   - Accepts doorOffset and windowOffset to adjust horizontal positions.
+   - Conditionally places a Door and/or Window on selected walls.
+   - Accepts doorOffset and windowOffset (in meters) to adjust horizontal placement.
 */
 function Walls({
   width,
@@ -181,7 +181,7 @@ function Walls({
           doorHeight={doorHeight}
           onToggle={onDoorToggle}
           color={doorColor}
-          position={[-doorWidthFB / 2 + doorOffset, 0, length / 2 + 0.1]}
+          position={[-doorWidthFB / 2 + doorOffset, 0, length / 2 + windowZOffset]}
         />
       )}
       {windowWall === "front" && (
@@ -189,7 +189,7 @@ function Walls({
           windowWidth={windowWidthFB}
           windowHeight={windowHeight}
           color={windowColor}
-          position={[-windowWidthFB / 2 + windowOffset, 1, length / 2 + 0.1]}
+          position={[-windowWidthFB / 2 + windowOffset, 1, length / 2 + windowZOffset]}
         />
       )}
 
@@ -204,7 +204,7 @@ function Walls({
           doorHeight={doorHeight}
           onToggle={onDoorToggle}
           color={doorColor}
-          position={[-doorWidthFB / 2 + doorOffset, 0, -length / 2 - 0.1]}
+          position={[-doorWidthFB / 2 + doorOffset, 0, -length / 2 - windowZOffset]}
           rotation={[0, Math.PI, 0]}
         />
       )}
@@ -213,7 +213,7 @@ function Walls({
           windowWidth={windowWidthFB}
           windowHeight={windowHeight}
           color={windowColor}
-          position={[-windowWidthFB / 2 + windowOffset, 1, -length / 2 - 0.1]}
+          position={[-windowWidthFB / 2 + windowOffset, 1, -length / 2 - windowZOffset]}
         />
       )}
 
@@ -229,7 +229,7 @@ function Walls({
             doorHeight={doorHeight}
             onToggle={onDoorToggle}
             color={doorColor}
-            position={[-doorWidthSide / 2 + doorOffset, 0, 0.1]}
+            position={[-doorWidthSide / 2 + doorOffset, 0, windowZOffset]}
           />
         </group>
       )}
@@ -239,7 +239,7 @@ function Walls({
             windowWidth={windowWidthSide}
             windowHeight={windowHeight}
             color={windowColor}
-            position={[-windowWidthSide / 2 + windowOffset, 1, 0.1]}
+            position={[-windowWidthSide / 2 + windowOffset, 1, windowZOffset]}
           />
         </group>
       )}
@@ -256,7 +256,7 @@ function Walls({
             doorHeight={doorHeight}
             onToggle={onDoorToggle}
             color={doorColor}
-            position={[-doorWidthSide / 2 + doorOffset, 0, 0.1]}
+            position={[-doorWidthSide / 2 + doorOffset, 0, windowZOffset]}
           />
         </group>
       )}
@@ -266,7 +266,7 @@ function Walls({
             windowWidth={windowWidthSide}
             windowHeight={windowHeight}
             color={windowColor}
-            position={[-windowWidthSide / 2 + windowOffset, 1, 0.1]}
+            position={[-windowWidthSide / 2 + windowOffset, 1, windowZOffset]}
           />
         </group>
       )}
@@ -348,42 +348,6 @@ function Bed({ color }) {
   );
 }
 
-/* Cupboard Component */
-function Cupboard({ color }) {
-  return (
-    <group>
-      <mesh position={[0, 1.25, 0]}>
-        <boxGeometry args={[2, 2.5, 1]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-    </group>
-  );
-}
-
-/* Mirror Table Component */
-function MirrorTable({ color }) {
-  return (
-    <group>
-      <mesh position={[0, 0.4, 0]}>
-        <boxGeometry args={[1.5, 0.2, 1]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-    </group>
-  );
-}
-
-/* Bedside Table Component */
-function BedsideTable({ color }) {
-  return (
-    <group>
-      <mesh position={[0, 0.4, 0]}>
-        <boxGeometry args={[0.8, 0.8, 0.8]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-    </group>
-  );
-}
-
 /* Sofa Component */
 function Sofa({ color }) {
   return (
@@ -400,16 +364,39 @@ function Sofa({ color }) {
   );
 }
 
-/* TV Table Component */
-function TvTable({ color }) {
+/* Cabinet Component */
+function Cabinet({ color }) {
   return (
     <group>
-      <mesh position={[0, 0.3, 0]}>
-        <boxGeometry args={[2, 0.3, 1]} />
+      {/* Simple cabinet representation */}
+      <mesh position={[0, 1.25, 0]}>
+        <boxGeometry args={[1.5, 2.5, 0.8]} />
         <meshStandardMaterial color={color} />
       </mesh>
-      <mesh position={[0, 0.15, 0]}>
-        <cylinderGeometry args={[0.05, 0.05, 0.5, 16]} />
+    </group>
+  );
+}
+
+/* Wardrobes Component */
+function Wardrobes({ color }) {
+  return (
+    <group>
+      {/* Simple wardrobes representation */}
+      <mesh position={[0, 1.5, 0]}>
+        <boxGeometry args={[2, 3, 1]} />
+        <meshStandardMaterial color={color} />
+      </mesh>
+    </group>
+  );
+}
+
+/* Rack Component */
+function Rack({ color }) {
+  return (
+    <group>
+      {/* Simple rack (shelf) representation */}
+      <mesh position={[0, 0.4, 0]}>
+        <boxGeometry args={[2, 0.3, 1]} />
         <meshStandardMaterial color={color} />
       </mesh>
     </group>
@@ -419,6 +406,28 @@ function TvTable({ color }) {
 /* Editable Furniture Wrapper using TransformControls */
 function Furniture({ item, onUpdate }) {
   const ref = useRef();
+
+  const renderFurnitureComponent = () => {
+    switch (item.type) {
+      case "Sofa":
+        return <Sofa color={item.color} />;
+      case "Table":
+        return <Table color={item.color} />;
+      case "Cabinet":
+        return <Cabinet color={item.color} />;
+      case "Bed":
+        return <Bed color={item.color} />;
+      case "Wardrobes":
+        return <Wardrobes color={item.color} />;
+      case "Rack":
+        return <Rack color={item.color} />;
+      case "Chair":
+        return <Chair color={item.color} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <TransformControls
       onDragEnd={() => {
@@ -428,14 +437,7 @@ function Furniture({ item, onUpdate }) {
       }}
     >
       <group ref={ref} position={item.position}>
-        {item.type === "Chair" && <Chair color={item.color} />}
-        {item.type === "Table" && <Table color={item.color} />}
-        {item.type === "Bed" && <Bed color={item.color} />}
-        {item.type === "Cupboard" && <Cupboard color={item.color} />}
-        {item.type === "MirrorTable" && <MirrorTable color={item.color} />}
-        {item.type === "BedsideTable" && <BedsideTable color={item.color} />}
-        {item.type === "Sofa" && <Sofa color={item.color} />}
-        {item.type === "TvTable" && <TvTable color={item.color} />}
+        {renderFurnitureComponent()}
       </group>
     </TransformControls>
   );
@@ -470,6 +472,9 @@ export default function App() {
   const externalCam = [0, 5, 10];
   const [cameraTarget, setCameraTarget] = useState(externalCam);
 
+  // isInside state: true when user has entered the room
+  const [isInside, setIsInside] = useState(false);
+
   // Door state handler (for additional logic)
   const handleDoorToggle = (isOpen) => {
     console.log("Door is now", isOpen ? "open" : "closed");
@@ -477,10 +482,12 @@ export default function App() {
 
   // Handlers to move camera inside/outside the room
   const handleGoInside = () => {
+    setIsInside(true);
     const insidePos = getInsidePosition(doorWall, roomWidth, roomLength, roomHeight);
     setCameraTarget(insidePos);
   };
   const handleExitRoom = () => {
+    setIsInside(false);
     setCameraTarget(externalCam);
   };
 
@@ -704,62 +711,64 @@ export default function App() {
             </div>
           )}
 
-          <h2 style={{ fontSize: "20px", margin: "10px 0" }}>Furniture Details</h2>
-          <div>
-            <label>Type: </label>
-            <select value={furnitureType} onChange={(e) => setFurnitureType(e.target.value)}>
-              <option value="Chair">Chair</option>
-              <option value="Table">Table</option>
-              <option value="Bed">Bed</option>
-              <option value="Cupboard">Cupboard</option>
-              <option value="MirrorTable">Mirror Table</option>
-              <option value="BedsideTable">Bedside Table</option>
-              <option value="Sofa">Sofa</option>
-              <option value="TvTable">TV Table</option> 
-              <option value="Cabinet">Cabinet</option>
-              <option value="Wardrobe">Wardrobe</option>
-              <option value="Rack">Rack</option>
-            </select>
-          </div>
-          <div>
-            <label>Color: </label>
-            <input
-              type="color"
-              value={furnitureColor}
-              onChange={(e) => setFurnitureColor(e.target.value)}
-              style={{ width: "50%" }}
-            />
-          </div>
-          <div>
-            <label>Pos X (m): </label>
-            <input
-              type="number"
-              value={furniturePosX}
-              onChange={(e) => setFurniturePosX(e.target.value)}
-              style={{ width: "50%" }}
-            />
-          </div>
-          <div>
-            <label>Pos Y (m): </label>
-            <input
-              type="number"
-              value={furniturePosY}
-              onChange={(e) => setFurniturePosY(e.target.value)}
-              style={{ width: "50%" }}
-            />
-          </div>
-          <div>
-            <label>Pos Z (m): </label>
-            <input
-              type="number"
-              value={furniturePosZ}
-              onChange={(e) => setFurniturePosZ(e.target.value)}
-              style={{ width: "50%" }}
-            />
-          </div>
-          <button onClick={addFurniture} style={{ width: "100%", marginTop: "10px" }}>
-            Add Furniture
-          </button>
+          {/* Display Furniture Details only after entering the room */}
+          {isInside && (
+            <>
+              <h2 style={{ fontSize: "20px", margin: "10px 0" }}>Furniture Details</h2>
+              <div>
+                <label>Type: </label>
+                <select value={furnitureType} onChange={(e) => setFurnitureType(e.target.value)}>
+                  {/* Sidebar options: Sofa, Table, Cabinet, Bed, Wardrobes, Rack, Chair */}
+                  <option value="Sofa">Sofa</option>
+                  <option value="Table">Table</option>
+                  <option value="Cabinet">Cabinet</option>
+                  <option value="Bed">Bed</option>
+                  <option value="Wardrobes">Wardrobes</option>
+                  <option value="Rack">Rack</option>
+                  <option value="Chair">Chair</option>
+                </select>
+              </div>
+              <div>
+                <label>Color: </label>
+                <input
+                  type="color"
+                  value={furnitureColor}
+                  onChange={(e) => setFurnitureColor(e.target.value)}
+                  style={{ width: "50%" }}
+                />
+              </div>
+              <div>
+                <label>Pos X (m): </label>
+                <input
+                  type="number"
+                  value={furniturePosX}
+                  onChange={(e) => setFurniturePosX(e.target.value)}
+                  style={{ width: "50%" }}
+                />
+              </div>
+              <div>
+                <label>Pos Y (m): </label>
+                <input
+                  type="number"
+                  value={furniturePosY}
+                  onChange={(e) => setFurniturePosY(e.target.value)}
+                  style={{ width: "50%" }}
+                />
+              </div>
+              <div>
+                <label>Pos Z (m): </label>
+                <input
+                  type="number"
+                  value={furniturePosZ}
+                  onChange={(e) => setFurniturePosZ(e.target.value)}
+                  style={{ width: "50%" }}
+                />
+              </div>
+              <button onClick={addFurniture} style={{ width: "100%", marginTop: "10px" }}>
+                Add Furniture
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
