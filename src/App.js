@@ -750,6 +750,96 @@ function Furniture({ item, onUpdate, onDelete }) {
   );
 }
 
+/* LightBulb Component */
+function LightBulb({ position, color, intensity, isOn = true }) {
+  // Calculate glow color based on intensity and whether light is on
+  const glowColor = isOn ? color : "#404040";
+  const glowIntensity = isOn ? intensity : 0;
+
+  return (
+    <group position={position}>
+      {/* Main light source */}
+      {isOn && (
+        <pointLight 
+          color={color} 
+          intensity={intensity * 2} // Increased intensity for better illumination
+          distance={20} // Increased distance
+          decay={1.5} // Reduced decay for better spread
+          castShadow // Enable shadow casting
+        />
+      )}
+      
+      {/* Glass bulb */}
+      <mesh position={[0, 0, 0]}>
+        <sphereGeometry args={[0.08, 32, 32]} />
+        <meshPhysicalMaterial
+          color={glowColor}
+          emissive={glowColor}
+          emissiveIntensity={glowIntensity * 0.5}
+          transparent={true}
+          opacity={0.9}
+          roughness={0}
+          metalness={0}
+          clearcoat={1}
+          clearcoatRoughness={0}
+          transmission={0.6}
+          thickness={0.05}
+        />
+      </mesh>
+
+      {/* Inner filament */}
+      <mesh position={[0, 0, 0]}>
+        <torusGeometry args={[0.02, 0.002, 16, 32]} />
+        <meshStandardMaterial
+          color={glowColor}
+          emissive={glowColor}
+          emissiveIntensity={glowIntensity}
+        />
+      </mesh>
+      
+      {/* Screw base (threaded) */}
+      <mesh position={[0, 0.06, 0]}>
+        <cylinderGeometry args={[0.04, 0.035, 0.12, 32, 4]} />
+        <meshStandardMaterial 
+          color="#B8B8B8" 
+          metalness={0.9} 
+          roughness={0.3}
+        />
+      </mesh>
+
+      {/* Base connector */}
+      <mesh position={[0, 0.12, 0]}>
+        <cylinderGeometry args={[0.045, 0.045, 0.02, 32]} />
+        <meshStandardMaterial 
+          color="#A0A0A0" 
+          metalness={0.8} 
+          roughness={0.2}
+        />
+      </mesh>
+      
+      {/* Ceiling mount plate */}
+      <mesh position={[0, 0.15, 0]}>
+        <cylinderGeometry args={[0.1, 0.1, 0.02, 32]} />
+        <meshStandardMaterial 
+          color="#909090" 
+          metalness={0.7} 
+          roughness={0.3}
+        />
+      </mesh>
+
+      {/* Decorative ring */}
+      <mesh position={[0, 0.14, 0]}>
+        <torusGeometry args={[0.09, 0.01, 16, 32]} />
+        <meshStandardMaterial 
+          color="#A0A0A0" 
+          metalness={0.8} 
+          roughness={0.2}
+        />
+      </mesh>
+    </group>
+  );
+}
+
 /* ----- Main App Component ----- */
 export default function App() {
   // Room dimensions & appearance
@@ -834,6 +924,17 @@ export default function App() {
   const [windowHeightFromFloor, setWindowHeightFromFloor] = useState(1); // default 1 meter from floor
   const [windowHorizontalOffset, setWindowHorizontalOffset] = useState(0); // center position
 
+  // Light bulb state
+  const [lightColor, setLightColor] = useState("#FFFFFF");
+  const [lightIntensity, setLightIntensity] = useState(1);
+  const [lightPosition, setLightPosition] = useState([0, 0, 0]);
+  const [isLightOn, setIsLightOn] = useState(true);
+
+  // Update light position when room dimensions change
+  useEffect(() => {
+    setLightPosition([0, roomHeight - 0.2, 0]);
+  }, [roomHeight]);
+
   return (
     <div style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}>
       {/* Top Navbar */}
@@ -853,16 +954,104 @@ export default function App() {
       <div style={{ display: "flex", flexDirection: "row", height: "calc(100vh - 50px)" }}>
         {/* 3D Scene */}
         <div style={{ flex: 5, borderRight: "1px solid #ddd" }}>
-          <Canvas camera={{ position: cameraTarget }}>
-            {/* Enhanced lighting setup */}
+          <Canvas camera={{ position: cameraTarget }} shadows>
+            {/* Exterior lighting - always active */}
             <ambientLight intensity={0.8} />
-            <directionalLight position={[10, 10, 5]} intensity={1.5} />
-            <pointLight position={[0, 8, 0]} intensity={0.8} />
-            <pointLight position={[0, 4, 8]} intensity={0.6} />
-            <pointLight position={[8, 4, 0]} intensity={0.6} />
-            
-            {/* Environment map for metallic reflections */}
-            <Environment preset="sunset" />
+            <directionalLight 
+              position={[10, 10, 5]} 
+              intensity={1.5}
+              castShadow
+            />
+
+            {/* Room lighting system - only affects objects inside the room */}
+            {isInside && (
+              <group>
+                {/* Create invisible walls to contain light */}
+                <mesh position={[0, roomHeight/2, roomLength/2]} visible={false}>
+                  <planeGeometry args={[roomWidth, roomHeight]} />
+                  <meshStandardMaterial side={THREE.DoubleSide} opacity={0} transparent />
+                </mesh>
+                <mesh position={[0, roomHeight/2, -roomLength/2]} visible={false}>
+                  <planeGeometry args={[roomWidth, roomHeight]} />
+                  <meshStandardMaterial side={THREE.DoubleSide} opacity={0} transparent />
+                </mesh>
+                <mesh position={[-roomWidth/2, roomHeight/2, 0]} rotation={[0, Math.PI/2, 0]} visible={false}>
+                  <planeGeometry args={[roomLength, roomHeight]} />
+                  <meshStandardMaterial side={THREE.DoubleSide} opacity={0} transparent />
+                </mesh>
+                <mesh position={[roomWidth/2, roomHeight/2, 0]} rotation={[0, -Math.PI/2, 0]} visible={false}>
+                  <planeGeometry args={[roomLength, roomHeight]} />
+                  <meshStandardMaterial side={THREE.DoubleSide} opacity={0} transparent />
+                </mesh>
+                <mesh position={[0, roomHeight, 0]} rotation={[-Math.PI/2, 0, 0]} visible={false}>
+                  <planeGeometry args={[roomWidth, roomLength]} />
+                  <meshStandardMaterial side={THREE.DoubleSide} opacity={0} transparent />
+                </mesh>
+                <mesh position={[0, 0, 0]} rotation={[Math.PI/2, 0, 0]} visible={false}>
+                  <planeGeometry args={[roomWidth, roomLength]} />
+                  <meshStandardMaterial side={THREE.DoubleSide} opacity={0} transparent />
+                </mesh>
+
+                {/* Interior lighting */}
+                {isLightOn && (
+                  <>
+                    {/* Main ceiling light */}
+                    <pointLight
+                      position={[0, roomHeight - 0.3, 0]}
+                      color={lightColor}
+                      intensity={lightIntensity * 2}
+                      distance={roomWidth * 1.5}
+                      decay={1.5}
+                      castShadow
+                    />
+
+                    {/* Corner lights for even illumination */}
+                    <pointLight
+                      position={[roomWidth/4, roomHeight - 0.3, roomLength/4]}
+                      color={lightColor}
+                      intensity={lightIntensity * 0.4}
+                      distance={roomWidth}
+                      decay={2}
+                    />
+                    <pointLight
+                      position={[-roomWidth/4, roomHeight - 0.3, roomLength/4]}
+                      color={lightColor}
+                      intensity={lightIntensity * 0.4}
+                      distance={roomWidth}
+                      decay={2}
+                    />
+                    <pointLight
+                      position={[roomWidth/4, roomHeight - 0.3, -roomLength/4]}
+                      color={lightColor}
+                      intensity={lightIntensity * 0.4}
+                      distance={roomWidth}
+                      decay={2}
+                    />
+                    <pointLight
+                      position={[-roomWidth/4, roomHeight - 0.3, -roomLength/4]}
+                      color={lightColor}
+                      intensity={lightIntensity * 0.4}
+                      distance={roomWidth}
+                      decay={2}
+                    />
+
+                    {/* Soft ambient fill light */}
+                    <ambientLight 
+                      intensity={lightIntensity * 0.2} 
+                      color={lightColor}
+                    />
+                  </>
+                )}
+
+                {/* Light bulb model */}
+                <LightBulb 
+                  position={lightPosition}
+                  color={lightColor}
+                  intensity={lightIntensity}
+                  isOn={isLightOn}
+                />
+              </group>
+            )}
             
             {navMode === "orbit" ? (
               <OrbitControls enablePan enableZoom enableRotate />
@@ -1223,6 +1412,52 @@ export default function App() {
               )}
             </>
           )}
+
+          {/* Light Controls - only show when inside */}
+          {isInside && (
+            <>
+              <h2 style={{ fontSize: "20px", margin: "20px 0 10px 0" }}>Light Settings</h2>
+              <div style={{ marginBottom: "10px" }}>
+                <label style={{ marginRight: "10px" }}>Light: </label>
+                <button
+                  onClick={() => setIsLightOn(!isLightOn)}
+                  style={{
+                    backgroundColor: isLightOn ? "#4CAF50" : "#f44336",
+                    color: "white",
+                    border: "none",
+                    padding: "5px 15px",
+                    borderRadius: "4px",
+                    cursor: "pointer"
+                  }}
+                >
+                  {isLightOn ? "ON" : "OFF"}
+                </button>
+              </div>
+              <div>
+                <label>Light Color: </label>
+                <input
+                  type="color"
+                  value={lightColor}
+                  onChange={(e) => setLightColor(e.target.value)}
+                  style={{ width: "50%" }}
+                />
+              </div>
+              <div style={{ marginTop: "10px" }}>
+                <label>Intensity: </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="5"
+                  step="0.1"
+                  value={lightIntensity}
+                  onChange={(e) => setLightIntensity(Number(e.target.value))}
+                  style={{ width: "50%" }}
+                  disabled={!isLightOn}
+                />
+                <span style={{ marginLeft: "10px" }}>{lightIntensity.toFixed(1)}</span>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -1236,4 +1471,4 @@ export default function App() {
       max: wallWidth/2 - doorWidth/2
     };
   }
-}  
+} 
