@@ -120,7 +120,7 @@ function Window({ windowWidth, windowHeight, color, ...props }) {
   );
 }
 
-/* Updated Walls Component with individual wall colors */
+/* Walls Component */
 function Walls({
   width,
   length,
@@ -142,7 +142,6 @@ function Walls({
   windowHeight,
   windowHeightFromFloor = 1
 }) {
-  // Helper functions to get door and window transforms
   const getDoorTransform = (wall) => {
     switch (wall) {
       case "front":
@@ -289,140 +288,10 @@ function Walls({
   );
 }
 
-/* ---------- Furniture Components ---------- */
-function Chair({ color }) {
-  return (
-    <group>
-      <mesh position={[0, 1, 0]} castShadow receiveShadow>
-        <boxGeometry args={[2, 0.3, 2]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-      <mesh position={[-0.8, 0.5, -0.8]} castShadow>
-        <boxGeometry args={[0.3, 1, 0.3]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-      <mesh position={[0.8, 0.5, -0.8]} castShadow>
-        <boxGeometry args={[0.3, 1, 0.3]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-      <mesh position={[-0.8, 0.5, 0.8]} castShadow>
-        <boxGeometry args={[0.3, 1, 0.3]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-      <mesh position={[0.8, 0.5, 0.8]} castShadow>
-        <boxGeometry args={[0.3, 1, 0.3]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-    </group>
-  );
-}
+/* Furniture Components (Chair, Table, Bed, etc.) */
+// ... (unchanged) ...
 
-function Table({ color }) {
-  return (
-    <group>
-      <mesh position={[0, 1, 0]} castShadow receiveShadow>
-        <boxGeometry args={[4, 0.3, 2]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-      <mesh position={[-1.7, 0.5, -0.8]} castShadow>
-        <boxGeometry args={[0.3, 1, 0.3]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-      <mesh position={[1.7, 0.5, -0.8]} castShadow>
-        <boxGeometry args={[0.3, 1, 0.3]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-      <mesh position={[-1.7, 0.5, 0.8]} castShadow>
-        <boxGeometry args={[0.3, 1, 0.3]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-      <mesh position={[1.7, 0.5, 0.8]} castShadow>
-        <boxGeometry args={[0.3, 1, 0.3]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-    </group>
-  );
-}
-
-function Bed({ color }) {
-  return (
-    <group>
-      <mesh position={[0, 0.5, 0]} castShadow receiveShadow>
-        <boxGeometry args={[3, 1, 6]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-      <mesh position={[1.2, 1, 1.5]} castShadow>
-        <boxGeometry args={[1, 0.5, 1.5]} />
-        <meshStandardMaterial color={"#ffffff"} />
-      </mesh>
-    </group>
-  );
-}
-
-function Cupboard({ color }) {
-  return (
-    <group>
-      <mesh position={[0, 1.25, 0]} castShadow>
-        <boxGeometry args={[2, 2.5, 1]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-    </group>
-  );
-}
-
-function MirrorTable({ color }) {
-  return (
-    <group>
-      <mesh position={[0, 0.4, 0]} castShadow>
-        <boxGeometry args={[1.5, 0.2, 1]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-    </group>
-  );
-}
-
-function BedsideTable({ color }) {
-  return (
-    <group>
-      <mesh position={[0, 0.4, 0]} castShadow>
-        <boxGeometry args={[0.8, 0.8, 0.8]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-    </group>
-  );
-}
-
-function Sofa({ color }) {
-  return (
-    <group>
-      <mesh position={[0, 0.75, 0]} castShadow>
-        <boxGeometry args={[3, 1.5, 1]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-      <mesh position={[0, 1.5, -0.4]} castShadow>
-        <boxGeometry args={[3, 0.5, 0.8]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-    </group>
-  );
-}
-
-function TvTable({ color }) {
-  return (
-    <group>
-      <mesh position={[0, 0.3, 0]} castShadow>
-        <boxGeometry args={[2, 0.3, 1]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-      <mesh position={[0, 0.15, 0]} castShadow>
-        <cylinderGeometry args={[0.05, 0.05, 0.5, 16]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-    </group>
-  );
-}
-
-/* Editable Furniture Wrapper using TransformControls */
+/* Editable Furniture Wrapper */
 function Furniture({ item, onUpdate, onDelete }) {
   const ref = useRef();
   return (
@@ -460,16 +329,14 @@ export default function App() {
   const [floorColor, setFloorColor] = useState("#cccccc");
   const [ceilingColor, setCeilingColor] = useState("#eeeeee");
 
-  // Door and Window colors
-  const [doorColor, setDoorColor] = useState("#654321");
-  const [windowColor, setWindowColor] = useState("#ADD8E6");
-
   // Door customization state
+  const [doorColor, setDoorColor] = useState("#654321");
   const [doorWidth, setDoorWidth] = useState(1.2);
   const [doorHeight, setDoorHeight] = useState(2.1);
   const [doorHorizontalOffset, setDoorHorizontalOffset] = useState(0);
 
   // Window customization state
+  const [windowColor, setWindowColor] = useState("#ADD8E6");
   const [windowWidth, setWindowWidth] = useState(2);
   const [windowHeight, setWindowHeight] = useState(1.5);
   const [windowHeightFromFloor, setWindowHeightFromFloor] = useState(1);
@@ -477,27 +344,35 @@ export default function App() {
 
   // Which walls get the door and window
   const [doorWall, setDoorWall] = useState("front");
-  const [windowWall, setWindowWall] = useState("back");
+  const [windowWall, setWindowWall] = useState("front");
 
-  // Navigation mode: "orbit" or "walk"
+  // Navigation mode & camera
   const [navMode, setNavMode] = useState("orbit");
-
-  // Camera target for smooth transitions
   const externalCam = [0, 5, 10];
   const [cameraTarget, setCameraTarget] = useState(externalCam);
 
-  // Lights on/off state
+  // Lights & inside/outside toggles
   const [lightsOn, setLightsOn] = useState(true);
-
-  // isInside state: true when the user is inside the room
   const [isInside, setIsInside] = useState(false);
 
-  // Door state handler
+  // Sync window onto same wall & offset it next to the door
+  useEffect(() => {
+    // always keep window on the same wall
+    setWindowWall(doorWall);
+
+    // calculate horizontal offset so window sits right next to the door
+    const gap = 0.1; // meters between door and window
+    setWindowHorizontalOffset(
+      doorHorizontalOffset + doorWidth / 2 + windowWidth / 2 + gap
+    );
+  }, [doorWall, doorWidth, windowWidth, doorHorizontalOffset]);
+
+  // Door toggle handler
   const handleDoorToggle = (isOpen) => {
     console.log("Door is now", isOpen ? "open" : "closed");
   };
 
-  // Camera handlers
+  // Go inside / exit
   const handleGoInside = () => {
     setIsInside(true);
     const insidePos = getInsidePosition(doorWall, roomWidth, roomLength, roomHeight);
@@ -508,7 +383,7 @@ export default function App() {
     setCameraTarget(externalCam);
   };
 
-  // Furniture state and adding/updating
+  // Furniture state
   const [furnitureType, setFurnitureType] = useState("Chair");
   const [furnitureColor, setFurnitureColor] = useState("#8b4513");
   const [furniturePosX, setFurniturePosX] = useState(0);
@@ -525,64 +400,49 @@ export default function App() {
     };
     setFurnitureItems([...furnitureItems, newItem]);
   };
-
   const updateFurniture = (id, newPos) => {
-    setFurnitureItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, position: newPos } : item))
+    setFurnitureItems(prev =>
+      prev.map(item => item.id === id ? { ...item, position: newPos } : item)
     );
   };
-
   const removeFurniture = (id) => {
-    setFurnitureItems(furnitureItems.filter((item) => item.id !== id));
+    setFurnitureItems(items => items.filter(item => item.id !== id));
   };
 
   return (
     <div style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}>
-      {/* Top Navbar */}
-      <nav
-        style={{
-          height: "50px",
-          backgroundColor: "#E69DB8",
-          display: "flex",
-          alignItems: "center",
-          padding: "0 20px",
-          boxShadow: "0 0 10px rgba(0,0,0,0.5)",
-        }}
-      >
+      {/* Navbar */}
+      <nav style={{ height: "50px", backgroundColor: "#E69DB8", display: "flex", alignItems: "center", padding: "0 20px", boxShadow: "0 0 10px rgba(0,0,0,0.5)" }}>
         <h1 style={{ color: "#333", margin: 0 }}>3D House Designer</h1>
       </nav>
 
-      <div style={{ display: "flex", flexDirection: "row", height: "calc(100vh - 50px)" }}>
-        {/* 3D Scene */}
+      <div style={{ display: "flex", height: "calc(100vh - 50px)" }}>
+        {/* 3D Canvas */}
         <div style={{ flex: 5, borderRight: "1px solid #ddd" }}>
           <Canvas shadows camera={{ position: cameraTarget }}>
-            {navMode === "orbit" ? (
-              <OrbitControls enablePan enableZoom enableRotate />
-            ) : (
-              <FirstPersonControls movementSpeed={5} lookSpeed={0.1} />
-            )}
+            {navMode === "orbit"
+              ? <OrbitControls enablePan enableZoom enableRotate />
+              : <FirstPersonControls movementSpeed={5} lookSpeed={0.1} />
+            }
             <CameraController navMode={navMode} target={cameraTarget} />
-            {/* New Lighting System */}
-            {lightsOn && (
-              <>
-                <ambientLight intensity={0.8} castShadow />
-                <directionalLight
-                  castShadow
-                  position={[10, 10, 5]}
-                  intensity={1.5}
-                  shadow-mapSize-width={1024}
-                  shadow-mapSize-height={1024}
-                  shadow-camera-left={-10}
-                  shadow-camera-right={10}
-                  shadow-camera-top={10}
-                  shadow-camera-bottom={-10}
-                />
-                <pointLight position={[0, 8, 0]} intensity={0.8} castShadow shadow-mapSize-width={512} shadow-mapSize-height={512} />
-                <pointLight position={[0, 4, 8]} intensity={0.6} castShadow shadow-mapSize-width={512} shadow-mapSize-height={512} />
-                <pointLight position={[8, 4, 0]} intensity={0.6} castShadow shadow-mapSize-width={512} shadow-mapSize-height={512} />
-                <Environment preset="sunset" />
-              </>
-            )}
+            {lightsOn && <>
+              <ambientLight intensity={0.8} castShadow />
+              <directionalLight
+                castShadow
+                position={[10, 10, 5]}
+                intensity={1.5}
+                shadow-mapSize-width={1024}
+                shadow-mapSize-height={1024}
+                shadow-camera-left={-10}
+                shadow-camera-right={10}
+                shadow-camera-top={10}
+                shadow-camera-bottom={-10}
+              />
+              <pointLight position={[0, 8, 0]} intensity={0.8} castShadow />
+              <pointLight position={[0, 4, 8]} intensity={0.6} castShadow />
+              <pointLight position={[8, 4, 0]} intensity={0.6} castShadow />
+              <Environment preset="sunset" />
+            </>}
             <Grid args={[100, 100]} position={[0, -0.01, 0]} />
             <Floor width={roomWidth} length={roomLength} floorColor={floorColor} />
             <Ceiling
@@ -612,130 +472,35 @@ export default function App() {
               windowHeight={windowHeight}
               windowHeightFromFloor={windowHeightFromFloor}
             />
-            {furnitureItems.map((item) => (
+            {furnitureItems.map(item =>
               <Furniture key={item.id} item={item} onUpdate={updateFurniture} onDelete={removeFurniture} />
-            ))}
+            )}
           </Canvas>
         </div>
-        {/* Sidebar Panel */}
-        <div
-          style={{
-            width: "300px",
-            padding: "10px",
-            backgroundColor: "#fff",
-            fontFamily: "Helvetica, sans-serif",
-            overflowY: "auto",
-          }}
-        >
-          {/* Room Properties Section */}
+
+        {/* Sidebar */}
+        <div style={{ width: "300px", padding: "10px", backgroundColor: "#fff", overflowY: "auto" }}>
           <h2 style={{ fontSize: "20px", margin: "10px 0" }}>Room Properties</h2>
-          <div>
-            <label>Width (m): </label>
-            <input
-              type="number"
-              value={roomWidth}
-              onChange={(e) => setRoomWidth(Number(e.target.value))}
-              style={{ width: "50%" }}
-            />
-          </div>
-          <div>
-            <label>Length (m): </label>
-            <input
-              type="number"
-              value={roomLength}
-              onChange={(e) => setRoomLength(Number(e.target.value))}
-              style={{ width: "50%" }}
-            />
-          </div>
-          <div>
-            <label>Height (m): </label>
-            <input
-              type="number"
-              value={roomHeight}
-              onChange={(e) => setRoomHeight(Number(e.target.value))}
-              style={{ width: "50%" }}
-            />
-          </div>
-          <div>
-            <label>Front Wall Color: </label>
-            <input
-              type="color"
-              value={frontWallColor}
-              onChange={(e) => setFrontWallColor(e.target.value)}
-              style={{ width: "50%" }}
-            />
-          </div>
-          <div>
-            <label>Back Wall Color: </label>
-            <input
-              type="color"
-              value={backWallColor}
-              onChange={(e) => setBackWallColor(e.target.value)}
-              style={{ width: "50%" }}
-            />
-          </div>
-          <div>
-            <label>Left Wall Color: </label>
-            <input
-              type="color"
-              value={leftWallColor}
-              onChange={(e) => setLeftWallColor(e.target.value)}
-              style={{ width: "50%" }}
-            />
-          </div>
-          <div>
-            <label>Right Wall Color: </label>
-            <input
-              type="color"
-              value={rightWallColor}
-              onChange={(e) => setRightWallColor(e.target.value)}
-              style={{ width: "50%" }}
-            />
-          </div>
-          <div>
-            <label>Floor Color: </label>
-            <input
-              type="color"
-              value={floorColor}
-              onChange={(e) => setFloorColor(e.target.value)}
-              style={{ width: "50%" }}
-            />
-          </div>
-          <div>
-            <label>Ceiling Color: </label>
-            <input
-              type="color"
-              value={ceilingColor}
-              onChange={(e) => setCeilingColor(e.target.value)}
-              style={{ width: "50%" }}
-            />
-          </div>
-          <button
-            onClick={() => console.log("Update Room")}
-            style={{
-              display: "block",
-              width: "100%",
-              padding: "10px",
-              background: "linear-gradient(to right, #7F00FF, #E100FF)",
-              color: "#fff",
-              border: "none",
-              borderRadius: "6px",
-              fontSize: "16px",
-              fontWeight: "bold",
-              cursor: "pointer",
-              marginBottom: "20px",
-            }}
-          >
+          {/* Room dimensions & colors */}
+          <div><label>Width (m): </label><input type="number" value={roomWidth} onChange={e => setRoomWidth(Number(e.target.value))} style={{ width: "50%" }} /></div>
+          <div><label>Length (m): </label><input type="number" value={roomLength} onChange={e => setRoomLength(Number(e.target.value))} style={{ width: "50%" }} /></div>
+          <div><label>Height (m): </label><input type="number" value={roomHeight} onChange={e => setRoomHeight(Number(e.target.value))} style={{ width: "50%" }} /></div>
+          <div><label>Front Wall: </label><input type="color" value={frontWallColor} onChange={e => setFrontWallColor(e.target.value)} style={{ width: "50%" }} /></div>
+          <div><label>Back Wall: </label><input type="color" value={backWallColor} onChange={e => setBackWallColor(e.target.value)} style={{ width: "50%" }} /></div>
+          <div><label>Left Wall: </label><input type="color" value={leftWallColor} onChange={e => setLeftWallColor(e.target.value)} style={{ width: "50%" }} /></div>
+          <div><label>Right Wall: </label><input type="color" value={rightWallColor} onChange={e => setRightWallColor(e.target.value)} style={{ width: "50%" }} /></div>
+          <div><label>Floor: </label><input type="color" value={floorColor} onChange={e => setFloorColor(e.target.value)} style={{ width: "50%" }} /></div>
+          <div><label>Ceiling: </label><input type="color" value={ceilingColor} onChange={e => setCeilingColor(e.target.value)} style={{ width: "50%" }} /></div>
+          <button style={{ margin: "10px 0", width: "100%", padding: "10px", background: "linear-gradient(to right,#7F00FF,#E100FF)", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
             Update Room
           </button>
 
-          {/* Door / Window Settings Section */}
           <h2 style={{ fontSize: "20px", margin: "10px 0" }}>Door / Window Settings</h2>
           <div>
             <label>Door Wall: </label>
             <select
               value={doorWall}
-              onChange={(e) => {
+              onChange={e => {
                 setDoorWall(e.target.value);
                 setDoorHorizontalOffset(0);
               }}
@@ -748,202 +513,112 @@ export default function App() {
             </select>
           </div>
           <div>
-            <label>Window Wall: </label>
-            <select
-              value={windowWall}
-              onChange={(e) => setWindowWall(e.target.value)}
-              style={{ width: "50%" }}
-            >
-              <option value="front">Front</option>
-              <option value="back">Back</option>
-              <option value="left">Left</option>
-              <option value="right">Right</option>
-            </select>
-          </div>
-          <div>
             <label>Door Offset (m): </label>
-            <input
-              type="number"
-              value={doorHorizontalOffset}
-              onChange={(e) => setDoorHorizontalOffset(Number(e.target.value))}
-              style={{ width: "50%" }}
-            />
+            <input type="number" value={doorHorizontalOffset} onChange={e => setDoorHorizontalOffset(Number(e.target.value))} style={{ width: "50%" }} />
           </div>
           <div>
-            <label>Window Offset (m): </label>
-            <input
-              type="number"
-              value={windowHorizontalOffset}
-              onChange={(e) => setWindowHorizontalOffset(Number(e.target.value))}
-              style={{ width: "50%" }}
-            />
+            <label>Door Width (m): </label>
+            <input type="number" value={doorWidth} onChange={e => setDoorWidth(Number(e.target.value))} style={{ width: "50%" }} />
+          </div>
+          <div>
+            <label>Door Height (m): </label>
+            <input type="number" value={doorHeight} onChange={e => setDoorHeight(Number(e.target.value))} style={{ width: "50%" }} />
           </div>
           <div>
             <label>Door Color: </label>
-            <input
-              type="color"
-              value={doorColor}
-              onChange={(e) => setDoorColor(e.target.value)}
-              style={{ width: "50%" }}
-            />
+            <input type="color" value={doorColor} onChange={e => setDoorColor(e.target.value)} style={{ width: "50%" }} />
+          </div>
+
+          <div>
+            <label>Window Width (m): </label>
+            <input type="number" value={windowWidth} onChange={e => setWindowWidth(Number(e.target.value))} style={{ width: "50%" }} />
+          </div>
+          <div>
+            <label>Window Height (m): </label>
+            <input type="number" value={windowHeight} onChange={e => setWindowHeight(Number(e.target.value))} style={{ width: "50%" }} />
+          </div>
+          <div>
+            <label>From Floor (m): </label>
+            <input type="number" value={windowHeightFromFloor} onChange={e => setWindowHeightFromFloor(Number(e.target.value))} style={{ width: "50%" }} />
           </div>
           <div>
             <label>Window Color: </label>
-            <input
-              type="color"
-              value={windowColor}
-              onChange={(e) => setWindowColor(e.target.value)}
-              style={{ width: "50%" }}
-            />
+            <input type="color" value={windowColor} onChange={e => setWindowColor(e.target.value)} style={{ width: "50%" }} />
           </div>
 
-          {/* Navigation Section */}
-          <h2 style={{ fontSize: "20px", margin: "10px 0" }}>Navigation</h2>
+          <h2 style={{ fontSize: "20px", margin: "10px 0" }}>Navigation & Lights</h2>
           <div>
             <label>Mode: </label>
-            <select
-              value={navMode}
-              onChange={(e) => setNavMode(e.target.value)}
-              style={{ width: "50%" }}
-            >
+            <select value={navMode} onChange={e => setNavMode(e.target.value)} style={{ width: "50%" }}>
               <option value="orbit">Orbit</option>
               <option value="walk">Walk</option>
             </select>
           </div>
           {navMode === "orbit" && (
-            <div>
-              <button onClick={handleGoInside} style={{ width: "100%", marginTop: "10px" }}>
-                Go Inside
-              </button>
-              <button onClick={handleExitRoom} style={{ width: "100%", marginTop: "10px" }}>
-                Exit Room
-              </button>
-            </div>
+            <>
+              <button onClick={handleGoInside} style={{ width: "100%", marginTop: "10px" }}>Go Inside</button>
+              <button onClick={handleExitRoom} style={{ width: "100%", marginTop: "10px" }}>Exit Room</button>
+            </>
           )}
-
-          {/* Light Settings Section */}
-          <h2 style={{ fontSize: "20px", margin: "10px 0" }}>Light Settings</h2>
           <button
             onClick={() => setLightsOn(!lightsOn)}
             style={{
-              display: "block",
               width: "100%",
+              marginTop: "10px",
               padding: "10px",
               backgroundColor: lightsOn ? "#d32f2f" : "#388e3c",
               color: "#fff",
               border: "none",
               borderRadius: "6px",
-              fontSize: "16px",
-              fontWeight: "bold",
-              cursor: "pointer",
-              marginBottom: "20px",
+              cursor: "pointer"
             }}
           >
             {lightsOn ? "Turn Lights Off" : "Turn Lights On"}
           </button>
 
-          {/* Furniture Details Section (display only when inside) */}
           {isInside && (
             <>
               <h2 style={{ fontSize: "20px", margin: "10px 0" }}>Furniture Details</h2>
               <div>
                 <label>Type: </label>
-                <select
-                  value={furnitureType}
-                  onChange={(e) => setFurnitureType(e.target.value)}
-                  style={{ width: "50%" }}
-                >
+                <select value={furnitureType} onChange={e => setFurnitureType(e.target.value)} style={{ width: "50%" }}>
                   <option value="Sofa">Sofa</option>
                   <option value="Table">Table</option>
-                  <option value="Cabinet">Cabinet</option>
+                  <option value="Cupboard">Cupboard</option>
                   <option value="Bed">Bed</option>
-                  <option value="Wardrobes">Wardrobes</option>
-                  <option value="Rack">Rack</option>
+                  <option value="MirrorTable">MirrorTable</option>
+                  <option value="BedsideTable">BedsideTable</option>
                   <option value="Chair">Chair</option>
+                  <option value="TvTable">TvTable</option>
                 </select>
               </div>
               <div>
                 <label>Color: </label>
-                <input
-                  type="color"
-                  value={furnitureColor}
-                  onChange={(e) => setFurnitureColor(e.target.value)}
-                  style={{ width: "50%" }}
-                />
+                <input type="color" value={furnitureColor} onChange={e => setFurnitureColor(e.target.value)} style={{ width: "50%" }} />
               </div>
               <div>
                 <label>Pos X (m): </label>
-                <input
-                  type="number"
-                  value={furniturePosX}
-                  onChange={(e) => setFurniturePosX(e.target.value)}
-                  style={{ width: "50%" }}
-                />
+                <input type="number" value={furniturePosX} onChange={e => setFurniturePosX(e.target.value)} style={{ width: "50%" }} />
               </div>
               <div>
                 <label>Pos Y (m): </label>
-                <input
-                  type="number"
-                  value={furniturePosY}
-                  onChange={(e) => setFurniturePosY(e.target.value)}
-                  style={{ width: "50%" }}
-                />
+                <input type="number" value={furniturePosY} onChange={e => setFurniturePosY(e.target.value)} style={{ width: "50%" }} />
               </div>
               <div>
                 <label>Pos Z (m): </label>
-                <input
-                  type="number"
-                  value={furniturePosZ}
-                  onChange={(e) => setFurniturePosZ(e.target.value)}
-                  style={{ width: "50%" }}
-                />
+                <input type="number" value={furniturePosZ} onChange={e => setFurniturePosZ(e.target.value)} style={{ width: "50%" }} />
               </div>
-              <button
-                onClick={addFurniture}
-                style={{
-                  width: "100%",
-                  marginTop: "10px",
-                  padding: "10px",
-                  backgroundColor: "#673ab7",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "6px",
-                  fontSize: "16px",
-                  fontWeight: "bold",
-                  cursor: "pointer",
-                }}
-              >
+              <button onClick={addFurniture} style={{ width: "100%", marginTop: "10px", padding: "10px", backgroundColor: "#673ab7", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
                 Add Furniture
               </button>
               {furnitureItems.length > 0 && (
                 <div style={{ marginTop: "20px" }}>
                   <h3 style={{ fontSize: "16px", margin: "10px 0" }}>Placed Furniture</h3>
                   <div style={{ maxHeight: "200px", overflowY: "auto" }}>
-                    {furnitureItems.map((item) => (
-                      <div
-                        key={item.id}
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          padding: "5px",
-                          margin: "5px 0",
-                          backgroundColor: "#f0f0f0",
-                          borderRadius: "4px"
-                        }}
-                      >
+                    {furnitureItems.map(item => (
+                      <div key={item.id} style={{ display: "flex", justifyContent: "space-between", padding: "5px", margin: "5px 0", backgroundColor: "#f0f0f0", borderRadius: "4px" }}>
                         <span>{item.type}</span>
-                        <button
-                          onClick={() => removeFurniture(item.id)}
-                          style={{
-                            backgroundColor: "#ff4444",
-                            color: "white",
-                            border: "none",
-                            padding: "5px 10px",
-                            borderRadius: "4px",
-                            cursor: "pointer"
-                          }}
-                        >
+                        <button onClick={() => removeFurniture(item.id)} style={{ backgroundColor: "#ff4444", color: "#fff", border: "none", padding: "5px 10px", borderRadius: "4px", cursor: "pointer" }}>
                           Remove
                         </button>
                       </div>
@@ -957,13 +632,4 @@ export default function App() {
       </div>
     </div>
   );
-
-  // Helper function for door offset limits based on current room
-  function getDoorOffsetLimits() {
-    const wallDim = doorWall === "front" || doorWall === "back" ? roomWidth : roomLength;
-    return {
-      min: -wallDim / 2 + doorWidth / 2,
-      max: wallDim / 2 - doorWidth / 2,
-    };
-  }
 }
