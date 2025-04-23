@@ -473,36 +473,66 @@ function Walls({
 
 /* ----- Furniture Components ----- */
 
-/* Chair Component - More realistic with cushion, backrest, and legs */
-function Chair({ color }) {
+/* Furniture size configurations */
+const FURNITURE_SIZES = {
+  Chair: {
+    Small: { width: 0.5, depth: 0.5, height: 0.8, seatHeight: 0.4 },
+    Medium: { width: 0.6, depth: 0.6, height: 0.9, seatHeight: 0.45 },
+    Large: { width: 0.7, depth: 0.7, height: 1.0, seatHeight: 0.5 }
+  },
+  Table: {
+    Small: { width: 1.2, depth: 0.6, height: 0.7 },
+    Medium: { width: 1.6, depth: 0.8, height: 0.73 },
+    Large: { width: 2.0, depth: 1.0, height: 0.75 }
+  },
+  Bed: {
+    Small: { width: 1.4, depth: 1.9, height: 0.5 }, // Single bed
+    Medium: { width: 1.6, depth: 2.0, height: 0.5 }, // Double bed
+    Large: { width: 2.1, depth: 2.4, height: 0.5 }  // King size bed
+  },
+  Sofa: {
+    Small: { width: 1.6, depth: 0.8, height: 0.9 },
+    Medium: { width: 2.2, depth: 1.0, height: 1.0 },
+    Large: { width: 2.8, depth: 1.2, height: 1.0 }
+  },
+  Cabinet: {
+    Small: { width: 0.8, depth: 0.4, height: 1.6 },
+    Medium: { width: 1.0, depth: 0.5, height: 2.0 },
+    Large: { width: 1.2, depth: 0.6, height: 2.4 }
+  },
+  Wardrobes: {
+    Small: { width: 1.6, depth: 0.5, height: 2.4 },
+    Medium: { width: 2.0, depth: 0.6, height: 3.0 },
+    Large: { width: 2.4, depth: 0.7, height: 3.2 }
+  },
+  Rack: {
+    Small: { width: 1.2, depth: 0.3, height: 1.2 },
+    Medium: { width: 1.8, depth: 0.4, height: 1.6 },
+    Large: { width: 2.4, depth: 0.5, height: 2.0 }
+  }
+};
+
+/* Chair Component - Now with size support */
+function Chair({ color, size = "Medium" }) {
+  const dims = FURNITURE_SIZES.Chair[size];
   return (
     <group>
       {/* Seat cushion */}
-      <mesh position={[0, 0.45, 0]}>
-        <boxGeometry args={[0.6, 0.1, 0.6]} />
+      <mesh position={[0, dims.seatHeight, 0]}>
+        <boxGeometry args={[dims.width, 0.1, dims.depth]} />
         <meshStandardMaterial color={color} roughness={0.7} metalness={0.1} />
       </mesh>
       {/* Backrest cushion */}
-      <mesh position={[0, 0.9, -0.25]}>
-        <boxGeometry args={[0.6, 0.5, 0.1]} />
+      <mesh position={[0, dims.height - 0.2, -dims.depth/2 + 0.05]}>
+        <boxGeometry args={[dims.width, (dims.height - dims.seatHeight) * 0.8, 0.1]} />
         <meshStandardMaterial color={color} roughness={0.7} metalness={0.1} />
       </mesh>
-      {/* Frame - chrome finish */}
+      {/* Frame */}
       <group>
-        {/* Seat frame */}
-        <mesh position={[0, 0.4, 0]}>
-          <boxGeometry args={[0.65, 0.05, 0.65]} />
-          <meshStandardMaterial color="#A0A0A0" roughness={0.2} metalness={0.8} />
-        </mesh>
-        {/* Backrest frame */}
-        <mesh position={[0, 0.9, -0.3]}>
-          <boxGeometry args={[0.65, 0.55, 0.05]} />
-          <meshStandardMaterial color="#A0A0A0" roughness={0.2} metalness={0.8} />
-        </mesh>
         {/* Legs */}
-        {[[-0.25, -0.25], [0.25, -0.25], [-0.25, 0.25], [0.25, 0.25]].map(([x, z], i) => (
-          <mesh key={i} position={[x, 0.2, z]}>
-            <cylinderGeometry args={[0.02, 0.02, 0.4]} />
+        {[[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([x, z], i) => (
+          <mesh key={i} position={[x * (dims.width/2 - 0.05), dims.seatHeight/2, z * (dims.depth/2 - 0.05)]}>
+            <cylinderGeometry args={[0.02, 0.02, dims.seatHeight]} />
             <meshStandardMaterial color="#A0A0A0" roughness={0.2} metalness={0.8} />
           </mesh>
         ))}
@@ -511,31 +541,22 @@ function Chair({ color }) {
   );
 }
 
-/* Table Component - More realistic with wood grain effect and metal legs */
-function Table({ color }) {
+/* Table Component - Now with size support */
+function Table({ color, size = "Medium" }) {
+  const dims = FURNITURE_SIZES.Table[size];
   return (
     <group>
-      {/* Table top with thickness */}
-      <mesh position={[0, 0.73, 0]}>
-        <boxGeometry args={[1.6, 0.04, 0.8]} />
+      {/* Table top */}
+      <mesh position={[0, dims.height, 0]}>
+        <boxGeometry args={[dims.width, 0.04, dims.depth]} />
         <meshStandardMaterial color={color} roughness={0.6} metalness={0.1} />
       </mesh>
-      {/* Support frame under table top */}
-      <mesh position={[0, 0.7, 0]}>
-        <boxGeometry args={[1.5, 0.02, 0.7]} />
-        <meshStandardMaterial color="#A0A0A0" roughness={0.2} metalness={0.8} />
-      </mesh>
       {/* Legs */}
-      {[[-0.7, -0.3], [0.7, -0.3], [-0.7, 0.3], [0.7, 0.3]].map(([x, z], i) => (
-        <group key={i} position={[x, 0.35, z]}>
+      {[[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([x, z], i) => (
+        <group key={i} position={[x * (dims.width/2 - 0.1), dims.height/2, z * (dims.depth/2 - 0.1)]}>
           <mesh>
-            <cylinderGeometry args={[0.02, 0.02, 0.7]} />
+            <cylinderGeometry args={[0.02, 0.02, dims.height]} />
             <meshStandardMaterial color="#A0A0A0" roughness={0.2} metalness={0.8} />
-          </mesh>
-          {/* Foot */}
-          <mesh position={[0, -0.33, 0]}>
-            <cylinderGeometry args={[0.05, 0.02, 0.02]} />
-            <meshStandardMaterial color="#808080" roughness={0.3} metalness={0.7} />
           </mesh>
         </group>
       ))}
@@ -543,174 +564,165 @@ function Table({ color }) {
   );
 }
 
-/* Bed Component - More realistic with mattress, pillows, and frame */
-function Bed({ color }) {
+/* Bed Component - Now with size support */
+function Bed({ color, size = "Medium" }) {
+  const dims = FURNITURE_SIZES.Bed[size];
+  
+  // Define pillow positions based on size
+  const getPillowPositions = () => {
+    switch(size) {
+      case "Small":
+        return [[-0.3]];
+      case "Medium":
+        return [[-0.4, 0.4]];
+      case "Large":
+        return [[-0.6, 0, 0.6]];
+      default:
+        return [[-0.4, 0.4]]; // Default to Medium
+    }
+  };
+
   return (
     <group>
       {/* Bed frame */}
-      <mesh position={[0, 0.15, 0]}>
-        <boxGeometry args={[2.1, 0.3, 2.4]} />
+      <mesh position={[0, dims.height/2, 0]}>
+        <boxGeometry args={[dims.width, dims.height, dims.depth]} />
         <meshStandardMaterial color="#8B4513" roughness={0.8} metalness={0.1} />
       </mesh>
       {/* Mattress */}
-      <mesh position={[0, 0.4, 0]}>
-        <boxGeometry args={[2, 0.2, 2.2]} />
+      <mesh position={[0, dims.height + 0.1, 0]}>
+        <boxGeometry args={[dims.width - 0.1, 0.2, dims.depth - 0.2]} />
         <meshStandardMaterial color={color} roughness={0.9} metalness={0} />
       </mesh>
       {/* Pillows */}
-      {[[-0.5, 0.5, -0.8], [0.5, 0.5, -0.8]].map(([x, y, z], i) => (
-        <mesh key={i} position={[x, y, z]}>
-          <boxGeometry args={[0.6, 0.1, 0.4]} />
+      {getPillowPositions()[0].map((x, i) => (
+        <mesh key={i} position={[x, dims.height + 0.25, -dims.depth/2 + 0.3]}>
+          <boxGeometry args={[0.5, 0.1, 0.4]} />
           <meshStandardMaterial color="#FFFFFF" roughness={0.9} metalness={0} />
         </mesh>
       ))}
-      {/* Headboard */}
-      <mesh position={[0, 0.8, -1.05]}>
-        <boxGeometry args={[2.1, 1, 0.1]} />
-        <meshStandardMaterial color="#8B4513" roughness={0.8} metalness={0.1} />
-      </mesh>
     </group>
   );
 }
 
-/* Sofa Component - More realistic with cushions and frame */
-function Sofa({ color }) {
+/* Sofa Component - Now with size support */
+function Sofa({ color, size = "Medium" }) {
+  const dims = FURNITURE_SIZES.Sofa[size];
+  const numCushions = size === "Small" ? 2 : size === "Medium" ? 3 : 4;
+  const cushionWidth = (dims.width - 0.4) / numCushions;
+  
   return (
     <group>
       {/* Base frame */}
-      <mesh position={[0, 0.25, 0]}>
-        <boxGeometry args={[2.2, 0.5, 1]} />
+      <mesh position={[0, dims.height/4, 0]}>
+        <boxGeometry args={[dims.width, dims.height/2, dims.depth]} />
         <meshStandardMaterial color="#4A4A4A" roughness={0.8} metalness={0.1} />
       </mesh>
       {/* Seat cushions */}
-      {[-0.7, 0, 0.7].map((x, i) => (
-        <mesh key={i} position={[x, 0.55, 0]}>
-          <boxGeometry args={[0.6, 0.2, 0.8]} />
-          <meshStandardMaterial color={color} roughness={0.9} metalness={0} />
-        </mesh>
-      ))}
-      {/* Back cushions */}
-      {[-0.7, 0, 0.7].map((x, i) => (
-        <mesh key={i} position={[x, 0.9, -0.3]}>
-          <boxGeometry args={[0.6, 0.5, 0.2]} />
-          <meshStandardMaterial color={color} roughness={0.9} metalness={0} />
-        </mesh>
-      ))}
-      {/* Backrest frame */}
-      <mesh position={[0, 0.8, -0.4]}>
-        <boxGeometry args={[2.2, 0.8, 0.1]} />
-        <meshStandardMaterial color="#4A4A4A" roughness={0.8} metalness={0.1} />
+      {Array.from({ length: numCushions }, (_, i) => {
+        const x = -dims.width/2 + cushionWidth/2 + cushionWidth * i + 0.2;
+        return (
+          <mesh key={i} position={[x, dims.height/2, 0]}>
+            <boxGeometry args={[cushionWidth - 0.1, 0.2, dims.depth - 0.2]} />
+            <meshStandardMaterial color={color} roughness={0.9} metalness={0} />
+          </mesh>
+        );
+      })}
+      {/* Backrest */}
+      <mesh position={[0, dims.height * 0.75, -dims.depth/2 + 0.1]}>
+        <boxGeometry args={[dims.width, dims.height/2, 0.2]} />
+        <meshStandardMaterial color={color} roughness={0.9} metalness={0} />
       </mesh>
-      {/* Armrests */}
-      {[-1.05, 1.05].map((x, i) => (
-        <mesh key={i} position={[x, 0.6, 0]}>
-          <boxGeometry args={[0.1, 0.4, 0.8]} />
-          <meshStandardMaterial color="#4A4A4A" roughness={0.8} metalness={0.1} />
-        </mesh>
-      ))}
     </group>
   );
 }
 
-/* Cabinet Component - More realistic with doors and handles */
-function Cabinet({ color }) {
+/* Cabinet Component - Now with size support */
+function Cabinet({ color, size = "Medium" }) {
+  const dims = FURNITURE_SIZES.Cabinet[size];
   return (
     <group>
       {/* Main body */}
-      <mesh position={[0, 1, 0]}>
-        <boxGeometry args={[1, 2, 0.5]} />
+      <mesh position={[0, dims.height/2, 0]}>
+        <boxGeometry args={[dims.width, dims.height, dims.depth]} />
         <meshStandardMaterial color={color} roughness={0.6} metalness={0.1} />
       </mesh>
       {/* Doors */}
-      {[-0.24, 0.24].map((x, i) => (
+      {[-1, 1].map((x, i) => (
         <group key={i}>
-          <mesh position={[x, 1, 0.26]}>
-            <boxGeometry args={[0.48, 1.96, 0.02]} />
+          <mesh position={[x * dims.width/4, dims.height/2, dims.depth/2 + 0.01]}>
+            <boxGeometry args={[dims.width/2 - 0.02, dims.height - 0.04, 0.02]} />
             <meshStandardMaterial color={color} roughness={0.6} metalness={0.1} />
           </mesh>
           {/* Handle */}
-          <mesh position={[x + (i === 0 ? 0.2 : -0.2), 1, 0.28]}>
-            <cylinderGeometry args={[0.01, 0.01, 0.1]} rotation={[Math.PI / 2, 0, 0]} />
+          <mesh position={[x * (dims.width/4 + 0.15), dims.height/2, dims.depth/2 + 0.03]}>
+            <cylinderGeometry args={[0.01, 0.01, 0.1]} rotation={[Math.PI/2, 0, 0]} />
             <meshStandardMaterial color="#C0C0C0" roughness={0.2} metalness={0.8} />
           </mesh>
         </group>
-      ))}
-      {/* Top and bottom panels with different shade */}
-      {[-0.99, 1.99].map((y, i) => (
-        <mesh key={i} position={[0, y, 0]}>
-          <boxGeometry args={[1, 0.02, 0.5]} />
-          <meshStandardMaterial 
-            color={color} 
-            roughness={0.7} 
-            metalness={0.1}
-          />
-        </mesh>
       ))}
     </group>
   );
 }
 
-/* Wardrobes Component - More realistic with multiple doors and handles */
-function Wardrobes({ color }) {
+/* Wardrobes Component - Now with size support */
+function Wardrobes({ color, size = "Medium" }) {
+  const dims = FURNITURE_SIZES.Wardrobes[size];
+  const numDoors = size === "Small" ? 2 : size === "Medium" ? 3 : 4;
+  const doorWidth = dims.width / numDoors;
+  
   return (
     <group>
       {/* Main body */}
-      <mesh position={[0, 1.5, 0]}>
-        <boxGeometry args={[2, 3, 0.6]} />
+      <mesh position={[0, dims.height/2, 0]}>
+        <boxGeometry args={[dims.width, dims.height, dims.depth]} />
         <meshStandardMaterial color={color} roughness={0.6} metalness={0.1} />
       </mesh>
       {/* Doors */}
-      {[-0.5, 0.5].map((x, i) => (
-        <group key={i}>
-          <mesh position={[x, 1.5, 0.31]}>
-            <boxGeometry args={[0.98, 2.96, 0.02]} />
-            <meshStandardMaterial color={color} roughness={0.6} metalness={0.1} />
-          </mesh>
-          {/* Handles */}
-          <mesh position={[x + (i === 0 ? 0.45 : -0.45), 1.5, 0.33]}>
-            <cylinderGeometry args={[0.02, 0.02, 0.15]} rotation={[Math.PI / 2, 0, 0]} />
-            <meshStandardMaterial color="#C0C0C0" roughness={0.2} metalness={0.8} />
-          </mesh>
-        </group>
-      ))}
-      {/* Top and bottom panels with different shade */}
-      {[0, 3].map((y, i) => (
-        <mesh key={i} position={[0, y, 0]}>
-          <boxGeometry args={[2, 0.04, 0.6]} />
-          <meshStandardMaterial 
-            color={color} 
-            roughness={0.7} 
-            metalness={0.1}
-          />
-        </mesh>
-      ))}
+      {Array.from({ length: numDoors }, (_, i) => {
+        const x = -dims.width/2 + doorWidth/2 + doorWidth * i;
+        return (
+          <group key={i}>
+            <mesh position={[x, dims.height/2, dims.depth/2 + 0.01]}>
+              <boxGeometry args={[doorWidth - 0.02, dims.height - 0.04, 0.02]} />
+              <meshStandardMaterial color={color} roughness={0.6} metalness={0.1} />
+            </mesh>
+            {/* Handle */}
+            <mesh position={[x + 0.15, dims.height/2, dims.depth/2 + 0.03]}>
+              <cylinderGeometry args={[0.01, 0.01, 0.15]} rotation={[Math.PI/2, 0, 0]} />
+              <meshStandardMaterial color="#C0C0C0" roughness={0.2} metalness={0.8} />
+            </mesh>
+          </group>
+        );
+      })}
     </group>
   );
 }
 
-/* Rack Component - More realistic with supports and shelves */
-function Rack({ color }) {
+/* Rack Component - Now with size support */
+function Rack({ color, size = "Medium" }) {
+  const dims = FURNITURE_SIZES.Rack[size];
+  const numShelves = size === "Small" ? 2 : size === "Medium" ? 3 : 4;
+  
   return (
     <group>
       {/* Vertical supports */}
-      {[-0.9, 0.9].map((x, i) => (
-        <mesh key={i} position={[x, 0.8, 0]}>
-          <boxGeometry args={[0.05, 1.6, 0.3]} />
+      {[-1, 1].map((x, i) => (
+        <mesh key={i} position={[x * (dims.width/2 - 0.025), dims.height/2, 0]}>
+          <boxGeometry args={[0.05, dims.height, dims.depth]} />
           <meshStandardMaterial color="#2F4F4F" roughness={0.5} metalness={0.5} />
         </mesh>
       ))}
       {/* Shelves */}
-      {[0.2, 0.8, 1.4].map((y, i) => (
-        <mesh key={i} position={[0, y, 0]}>
-          <boxGeometry args={[1.8, 0.03, 0.4]} />
-          <meshStandardMaterial color={color} roughness={0.6} metalness={0.1} />
-        </mesh>
-      ))}
-      {/* Back panel */}
-      <mesh position={[0, 0.8, -0.15]}>
-        <boxGeometry args={[1.8, 1.6, 0.02]} />
-        <meshStandardMaterial color={color} roughness={0.6} metalness={0.1} />
-      </mesh>
+      {Array.from({ length: numShelves }, (_, i) => {
+        const y = dims.height / (numShelves - 1) * i;
+        return (
+          <mesh key={i} position={[0, y, 0]}>
+            <boxGeometry args={[dims.width - 0.1, 0.03, dims.depth]} />
+            <meshStandardMaterial color={color} roughness={0.6} metalness={0.1} />
+          </mesh>
+        );
+      })}
     </group>
   );
 }
@@ -722,19 +734,19 @@ function Furniture({ item, onUpdate, onDelete }) {
   const renderFurnitureComponent = () => {
     switch (item.type) {
       case "Sofa":
-        return <Sofa color={item.color} />;
+        return <Sofa color={item.color} size={item.size} />;
       case "Table":
-        return <Table color={item.color} />;
+        return <Table color={item.color} size={item.size} />;
       case "Cabinet":
-        return <Cabinet color={item.color} />;
+        return <Cabinet color={item.color} size={item.size} />;
       case "Bed":
-        return <Bed color={item.color} />;
+        return <Bed color={item.color} size={item.size} />;
       case "Wardrobes":
-        return <Wardrobes color={item.color} />;
+        return <Wardrobes color={item.color} size={item.size} />;
       case "Rack":
-        return <Rack color={item.color} />;
+        return <Rack color={item.color} size={item.size} />;
       case "Chair":
-        return <Chair color={item.color} />;
+        return <Chair color={item.color} size={item.size} />;
       default:
         return null;
     }
@@ -902,11 +914,15 @@ export default function App() {
   const [furniturePosZ, setFurniturePosZ] = useState(0);
   const [furnitureItems, setFurnitureItems] = useState([]);
 
+  // Add furniture size state
+  const [furnitureSize, setFurnitureSize] = useState("Medium");
+
   const addFurniture = () => {
     const newItem = {
       id: Date.now(),
       type: furnitureType,
       color: furnitureColor,
+      size: furnitureSize,
       position: [Number(furniturePosX), Number(furniturePosY), Number(furniturePosZ)]
     };
     setFurnitureItems([...furnitureItems, newItem]);
@@ -946,6 +962,21 @@ export default function App() {
   const [leftWallColor, setLeftWallColor] = useState("#FFFFFF");
   const [rightWallColor, setRightWallColor] = useState("#FFFFFF");
 
+  // Add view mode state
+  const [viewMode, setViewMode] = useState("3D");
+
+  // Camera positions for different views
+  const get3DPosition = () => [0, 5, 10];
+  const get2DPosition = () => [0, roomHeight * 2, 0];
+
+  // Update external camera position based on view mode
+  useEffect(() => {
+    const newPosition = viewMode === "3D" ? get3DPosition() : get2DPosition();
+    if (!isInside) {
+      setCameraTarget(newPosition);
+    }
+  }, [viewMode, roomHeight, isInside]);
+
   return (
     <div style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}>
       {/* Top Navbar */}
@@ -956,10 +987,35 @@ export default function App() {
           display: "flex",
           alignItems: "center",
           padding: "0 20px",
-          boxShadow: "0 0 10px rgba(0,0,0,0.5)"
+          boxShadow: "0 0 10px rgba(0,0,0,0.5)",
+          justifyContent: "space-between" // Add this to space out the elements
         }}
       >
         <h1 style={{ color: "#333", margin: 0 }}>3D House Designer</h1>
+        <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
+          {/* View Mode Toggle */}
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <label style={{ color: "#333" }}>View Mode:</label>
+            <select 
+              value={viewMode}
+              onChange={(e) => {
+                setViewMode(e.target.value);
+                if (navMode === "walk") {
+                  setNavMode("orbit");
+                }
+              }}
+              style={{
+                padding: "5px",
+                borderRadius: "4px",
+                border: "1px solid #ddd",
+                backgroundColor: "#fff"
+              }}
+            >
+              <option value="3D">3D View</option>
+              <option value="2D">2D View</option>
+            </select>
+          </div>
+        </div>
       </nav>
 
       <div style={{ display: "flex", flexDirection: "row", height: "calc(100vh - 50px)" }}>
@@ -1064,20 +1120,27 @@ export default function App() {
               </group>
             )}
             
-            {navMode === "orbit" ? (
-              <OrbitControls enablePan enableZoom enableRotate />
-            ) : (
-              <FirstPersonControls movementSpeed={5} lookSpeed={0.1} />
+            {/* Update OrbitControls based on view mode */}
+            {navMode === "orbit" && (
+              <OrbitControls 
+                enablePan 
+                enableZoom 
+                enableRotate={viewMode === "3D"}
+                minPolarAngle={viewMode === "2D" ? 0 : undefined}
+                maxPolarAngle={viewMode === "2D" ? 0 : undefined}
+              />
             )}
             <CameraController navMode={navMode} target={cameraTarget} />
             <Grid args={[100, 100]} position={[0, -0.01, 0]} />
             <Floor width={roomWidth} length={roomLength} floorColor={floorColor} />
-            <Ceiling
-              roomWidth={roomWidth}
-              roomLength={roomLength}
-              roomHeight={roomHeight}
-              ceilingColor={ceilingColor}
-            />
+            {viewMode === "3D" && (
+              <Ceiling
+                roomWidth={roomWidth}
+                roomLength={roomLength}
+                roomHeight={roomHeight}
+                ceilingColor={ceilingColor}
+              />
+            )}
             <Walls
               width={roomWidth}
               length={roomLength}
@@ -1199,15 +1262,17 @@ export default function App() {
               style={{ width: "50%" }}
             />
           </div>
-          <div>
-            <label>Ceiling Color: </label>
-            <input
-              type="color"
-              value={ceilingColor}
-              onChange={(e) => setCeilingColor(e.target.value)}
-              style={{ width: "50%" }}
-            />
-          </div>
+          {viewMode === "3D" && (
+            <div>
+              <label>Ceiling Color: </label>
+              <input
+                type="color"
+                value={ceilingColor}
+                onChange={(e) => setCeilingColor(e.target.value)}
+                style={{ width: "50%" }}
+              />
+            </div>
+          )}
 
           <h2 style={{ fontSize: "20px", margin: "10px 0" }}>Door Settings</h2>
           <div>
@@ -1348,12 +1413,23 @@ export default function App() {
           <h2 style={{ fontSize: "20px", margin: "10px 0" }}>Navigation</h2>
           <div>
             <label>Mode: </label>
-            <select value={navMode} onChange={(e) => setNavMode(e.target.value)}>
+            <select 
+              value={navMode} 
+              onChange={(e) => {
+                setNavMode(e.target.value);
+                // Force orbit mode in 2D view
+                if (viewMode === "2D" && e.target.value === "walk") {
+                  setViewMode("3D");
+                }
+              }}
+            >
               <option value="orbit">Orbit</option>
               <option value="walk">Walk</option>
             </select>
           </div>
-          {navMode === "orbit" && (
+
+          {/* Disable room entry in 2D mode */}
+          {navMode === "orbit" && viewMode === "3D" && (
             <div>
               <button onClick={handleGoInside} style={{ width: "100%", marginTop: "10px" }}>
                 Go Inside
@@ -1378,6 +1454,14 @@ export default function App() {
                   <option value="Wardrobes">Wardrobes</option>
                   <option value="Rack">Rack</option>
                   <option value="Chair">Chair</option>
+                </select>
+              </div>
+              <div>
+                <label>Size: </label>
+                <select value={furnitureSize} onChange={(e) => setFurnitureSize(e.target.value)}>
+                  <option value="Small">Small</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Large">Large</option>
                 </select>
               </div>
               <div>
@@ -1518,4 +1602,4 @@ export default function App() {
       max: wallWidth/2 - doorWidth/2
     };
   }
-} 
+}
