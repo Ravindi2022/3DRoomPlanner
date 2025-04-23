@@ -298,19 +298,22 @@ function Walls({
   width,
   length,
   height,
-  color,
+  frontWallColor,
+  backWallColor,
+  leftWallColor,
+  rightWallColor,
   doorWall,
   windowWall,
   onDoorToggle,
   doorColor,
   windowColor,
-  doorOffset = 0,
-  doorWidth = 1.2,
-  doorHeight = 2.1,
-  windowOffset = 0,
-  windowWidth = 2,
-  windowHeight = 1.5,
-  windowHeightFromFloor = 1
+  doorOffset,
+  doorWidth,
+  doorHeight,
+  windowOffset,
+  windowWidth,
+  windowHeight,
+  windowHeightFromFloor
 }) {
   // For front/back walls, horizontal dimension is roomWidth.
   const doorWidthFB = width * 0.3;
@@ -369,7 +372,7 @@ function Walls({
       {/* Front Wall */}
       <mesh position={[0, height / 2, length / 2]}>
         <planeGeometry args={[width, height]} />
-        <meshStandardMaterial color={color} side={THREE.DoubleSide} />
+        <meshStandardMaterial color={frontWallColor} side={THREE.DoubleSide} />
       </mesh>
       {doorWall === "front" && (
         <Door
@@ -393,7 +396,7 @@ function Walls({
       {/* Back Wall */}
       <mesh position={[0, height / 2, -length / 2]}>
         <planeGeometry args={[width, height]} />
-        <meshStandardMaterial color={color} side={THREE.DoubleSide} />
+        <meshStandardMaterial color={backWallColor} side={THREE.DoubleSide} />
       </mesh>
       {doorWall === "back" && (
         <Door
@@ -418,7 +421,7 @@ function Walls({
       {/* Left Wall */}
       <mesh position={[-width / 2, height / 2, 0]} rotation={[0, Math.PI / 2, 0]}>
         <planeGeometry args={[length, height]} />
-        <meshStandardMaterial color={color} side={THREE.DoubleSide} />
+        <meshStandardMaterial color={leftWallColor} side={THREE.DoubleSide} />
       </mesh>
       {doorWall === "left" && (
         <Door
@@ -435,14 +438,15 @@ function Walls({
           windowWidth={windowWidth}
           windowHeight={windowHeight}
           color={windowColor}
-          position={[0, windowHeightFromFloor - height / 2 + windowHeight / 2, 0.1]}
+          position={getWindowPosition("left")}
+          rotation={[0, Math.PI / 2, 0]}
         />
       )}
 
       {/* Right Wall */}
       <mesh position={[width / 2, height / 2, 0]} rotation={[0, -Math.PI / 2, 0]}>
         <planeGeometry args={[length, height]} />
-        <meshStandardMaterial color={color} side={THREE.DoubleSide} />
+        <meshStandardMaterial color={rightWallColor} side={THREE.DoubleSide} />
       </mesh>
       {doorWall === "right" && (
         <Door
@@ -459,7 +463,8 @@ function Walls({
           windowWidth={windowWidth}
           windowHeight={windowHeight}
           color={windowColor}
-          position={[0, windowHeightFromFloor - height / 2 + windowHeight / 2, 0.1]}
+          position={getWindowPosition("right")}
+          rotation={[0, -Math.PI / 2, 0]}
         />
       )}
     </group>
@@ -935,6 +940,12 @@ export default function App() {
     setLightPosition([0, roomHeight - 0.2, 0]);
   }, [roomHeight]);
 
+  // Individual wall colors
+  const [frontWallColor, setFrontWallColor] = useState("#FFFFFF");
+  const [backWallColor, setBackWallColor] = useState("#FFFFFF");
+  const [leftWallColor, setLeftWallColor] = useState("#FFFFFF");
+  const [rightWallColor, setRightWallColor] = useState("#FFFFFF");
+
   return (
     <div style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}>
       {/* Top Navbar */}
@@ -1071,7 +1082,10 @@ export default function App() {
               width={roomWidth}
               length={roomLength}
               height={roomHeight}
-              color={wallColor}
+              frontWallColor={frontWallColor}
+              backWallColor={backWallColor}
+              leftWallColor={leftWallColor}
+              rightWallColor={rightWallColor}
               doorWall={doorWall}
               windowWall={windowWall}
               onDoorToggle={handleDoorToggle}
@@ -1134,15 +1148,48 @@ export default function App() {
               style={{ width: "50%" }}
             />
           </div>
-          <div>
-            <label>Wall Color: </label>
-            <input
-              type="color"
-              value={wallColor}
-              onChange={(e) => setWallColor(e.target.value)}
-              style={{ width: "50%" }}
-            />
+          
+          {/* Wall Colors Section - Moved here */}
+          <h3 style={{ fontSize: "16px", margin: "20px 0 10px 0" }}>Wall Colors</h3>
+          <div style={{ display: "grid", gap: "10px", marginBottom: "20px" }}>
+            <div>
+              <label>Front Wall: </label>
+              <input
+                type="color"
+                value={frontWallColor}
+                onChange={(e) => setFrontWallColor(e.target.value)}
+                style={{ width: "50%" }}
+              />
+            </div>
+            <div>
+              <label>Back Wall: </label>
+              <input
+                type="color"
+                value={backWallColor}
+                onChange={(e) => setBackWallColor(e.target.value)}
+                style={{ width: "50%" }}
+              />
+            </div>
+            <div>
+              <label>Left Wall: </label>
+              <input
+                type="color"
+                value={leftWallColor}
+                onChange={(e) => setLeftWallColor(e.target.value)}
+                style={{ width: "50%" }}
+              />
+            </div>
+            <div>
+              <label>Right Wall: </label>
+              <input
+                type="color"
+                value={rightWallColor}
+                onChange={(e) => setRightWallColor(e.target.value)}
+                style={{ width: "50%" }}
+              />
+            </div>
           </div>
+
           <div>
             <label>Floor Color: </label>
             <input
