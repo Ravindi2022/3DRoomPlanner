@@ -995,6 +995,22 @@ export default function App() {
         <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
           {/* View Mode Toggle */}
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+
+<button
+              style={{
+                marginLeft: "10px",
+                padding: "6px 12px",
+                backgroundColor: "purple", //"#4CAF50",  // Match your app's color theme if needed
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer"
+              }}
+              onClick={() => window.location.href = "http://localhost:5173"}
+            >
+              Back to Store
+            </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
             <label style={{ color: "#333" }}>View Mode:</label>
             <select 
               value={viewMode}
