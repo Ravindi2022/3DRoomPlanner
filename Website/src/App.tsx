@@ -38,6 +38,13 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/design-studio/:productId" element={<DesignStudio />} />
+            <Route
+              path="/design-studio/:productId"
+              element={
+                <RedirectToExternal />
+              }
+            />
+          </Routes>
           </Routes>
         </main>
         <Footer />
