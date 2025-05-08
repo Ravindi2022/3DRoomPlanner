@@ -12,6 +12,15 @@ import { Admin } from './pages/Admin';
 import { DesignStudio } from './pages/DesignStudio';
 import { Orders } from './pages/Orders';
 
+import { useEffect } from "react";
+
+function RedirectToExternal() {
+  useEffect(() => {
+    window.location.href = "http://localhost:3000";
+  }, []);
+
+  return null;
+}
 function App() {
   return (
     <Router>
