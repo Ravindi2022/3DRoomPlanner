@@ -1,17 +1,38 @@
-# 3DRoomPlanner
+3DRoomPlanner
+3DRoomPlanner is an interactive furniture design and visualization application that allows users to place, arrange and customize furniture in a 3D room environment. Designed for interior designers and end-users alike, the app lets you pick room dimensions, tweak color schemes for walls and furnishings, and see a realistic, real-time preview of your space. Under the hood it’s built with React and powered by the three.js library for high-performance 3D rendering.
 
-3DRoomPlanner is an interactive furniture design and visualization application that allows users to visualize and customize furniture in 3D within their rooms. Designed for interior designers and customers alike, the app enables users to choose the suitable room size for their preferance and adjust the color scheme, of the room and the furniture, to create a realistic representation of how the final design will look. The application is built using React and utilizes the 3.js library to handle 3D rendering.
+In addition, a companion furniture store website named LUXE showcases the studio’s features and guides users through installation and usage. That website is built with Vite, React and TypeScript.
 
-This project is developed as part of the PUSL 3122 module: Human-Computer Interaction, Computer Graphics, and Visualisation, as a group coursework assignment for the academic year 2024-2025.
+This project was developed as part of the PUSL3122 module: Human-Computer Interaction, Computer Graphics, and Visualisation, as a group coursework assignment for the academic year 2024–2025.
+
+## Repository Structure
+3D-design-studio/
+Contains the React-based 3D Design Studio application (including App.js), where users can visualize and customize furniture in 3D.
+
+website/
+Contains the LUXE furniture store marketing website code (including App.tsx), built with Vite, React and TypeScript.
+
+package.json (root)
+Defines workspace settings and scripts to run both apps concurrently.
 
 ## Features
+Real-time 3D Room Visualization
+Inspect a fully customizable 3D room model, with dynamic lighting and shadows.
 
-Real-time 3D Room Visualization: View a fully customizable 3D model of a room with adjustable furniture elements like chairs, tables, and more.
+Room Dimension Selector
+Choose room size and shape from preset options or enter custom measurements.
 
-Room Dimensions: Choose the most suitable room size, shape, and color scheme for a realistic experience.
+Furniture Placement & Customization
+Add chairs, tables, sofas and more—scale them, adjust their color/texture, and move them around freely.
 
-Furniture Visualization: Add and customize furniture, including scaling, color adjustments, and shading.
+Color Scheme Editor
+Change wall and floor colors (and furniture finishes) via an intuitive color picker to preview different palettes.
 
-User-Friendly Interface: An intuitive UI designed with React for smooth interactions.
+Responsive, User-Friendly Interface
+Built in React for fluid interactions; supports mouse and touch controls.
 
-3D Rendering with 3.js: Powerful 3D rendering capabilities powered by the 3.js library for realistic visualizations.
+3D Rendering with three.js
+High-performance rendering pipeline ensures smooth frame rates even with complex scenes.
+
+Vite-Powered Landing Page
+Lightning-fast build times, hot-module reloading, and a TypeScript codebase for the marketing site.
