@@ -44,4 +44,12 @@ Clicking "View in Design Studio" will take you to the 3D design studio.
 
 <img width="1499" alt="design studio button" src="https://github.com/user-attachments/assets/cf20b09c-25fd-48f5-b873-b9dcd750bc1d" />
 
+## 3D design studio 
 
+Exterior
+
+![Screenshot (98)](https://github.com/user-attachments/assets/401ee137-3f29-41dd-842f-dfabf30a305a)
+
+Interior
+
+![Screenshot (100)](https://github.com/user-attachments/assets/635ad2b3-ed5a-4e65-91bc-f100fe6c70fe)
