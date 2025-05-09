@@ -39,3 +39,9 @@ Lightning-fast build times, hot-module reloading, and a TypeScript codebase for 
 
 
 <img width="1499" alt="LUXE 1st page" src="https://github.com/user-attachments/assets/ac452ee3-9a7b-4a13-b1da-4c5e19d72021" />
+
+Clicking "View in Design Studio" will take you to the 3D design studio.
+
+<img width="1499" alt="design studio button" src="https://github.com/user-attachments/assets/cf20b09c-25fd-48f5-b873-b9dcd750bc1d" />
+
+
