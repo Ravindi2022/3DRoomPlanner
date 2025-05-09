@@ -36,3 +36,6 @@ High-performance rendering pipeline ensures smooth frame rates even with complex
 
 Vite-Powered Landing Page
 Lightning-fast build times, hot-module reloading, and a TypeScript codebase for the marketing site.
+
+
+<img width="1499" alt="LUXE 1st page" src="https://github.com/user-attachments/assets/ac452ee3-9a7b-4a13-b1da-4c5e19d72021" />
