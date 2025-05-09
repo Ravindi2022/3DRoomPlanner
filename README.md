@@ -53,3 +53,8 @@ Exterior
 Interior
 
 ![Screenshot (100)](https://github.com/user-attachments/assets/635ad2b3-ed5a-4e65-91bc-f100fe6c70fe)
+
+2D view of the room
+
+![Screenshot (106)](https://github.com/user-attachments/assets/36a6c744-8982-4a10-a224-91c382edc423)
+
