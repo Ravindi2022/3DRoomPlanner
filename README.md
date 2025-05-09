@@ -1,4 +1,4 @@
-3DRoomPlanner
+# 3DRoomPlanner
 3DRoomPlanner is an interactive furniture design and visualization application that allows users to place, arrange and customize furniture in a 3D room environment. Designed for interior designers and end-users alike, the app lets you pick room dimensions, tweak color schemes for walls and furnishings, and see a realistic, real-time preview of your space. Under the hood it’s built with React and powered by the three.js library for high-performance 3D rendering.
 
 In addition, a companion furniture store website named LUXE showcases the studio’s features and guides users through installation and usage. That website is built with Vite, React and TypeScript.
